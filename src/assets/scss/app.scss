@@ -8,10 +8,18 @@
 * {
     box-sizing: border-box;
     font-family: "Inter";
+    user-select: none;
 }
 
 html, body {
     margin: 0;
     background-color: var(--color-bg);
     color: var(--color-text);
+}
+
+.bottom-button {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
 }

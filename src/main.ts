@@ -1,14 +1,18 @@
 import { createApp } from "vue";
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { createPinia } from "pinia";
 import App from "./App.vue";
 
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes: [
         {
             path: "/",
             component: () => import("./pages/index.vue"),
+        },
+        {
+            path: "/register",
+            component: () => import("./pages/register.vue"),
         },
         {
             path: "/welcome",
@@ -17,6 +21,26 @@ const router = createRouter({
         {
             path: "/quiz/start",
             component: () => import("./pages/quiz/start.vue"),
+        },
+        {
+            path: "/quiz/page",
+            component: () => import("./pages/quiz/page.vue"),
+        },
+        {
+            path: "/start",
+            component: () => import("./pages/start.vue"),
+        },
+        {
+            path: "/qr",
+            component: () => import("./pages/qr.vue"),
+        },
+        {
+            path: "/history",
+            component: () => import("./pages/history.vue"),
+        },
+        {
+            path: "/themes",
+            component: () => import("./pages/themes.vue"),
         },
     ],
 });
