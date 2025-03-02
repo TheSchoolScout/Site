@@ -36,6 +36,7 @@ const { quizResults } = storeToRefs(app);
         font-size: 2rem;
         font-weight: 600;
         background: radial-gradient(#0F3732, rgba(42, 157, 144, 0));
+        border-radius: 50%;
     }
 }
 </style>

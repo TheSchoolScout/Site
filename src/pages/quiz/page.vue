@@ -10,8 +10,8 @@
             </header>
             <SelectBox :question="page.question" v-model="selected"/>
         </template>
-        <Button @click="stop">Завершить досрочно</Button>
         <Button @click="answer">Далее</Button>
+        <Button @click="stop">Завершить досрочно</Button>
     </div>
 </template>
 <script lang="ts" setup>

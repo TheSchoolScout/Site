@@ -27,6 +27,10 @@ const router = createRouter({
             component: () => import("./pages/quiz/page.vue"),
         },
         {
+            path: "/quiz/finish",
+            component: () => import("./pages/quiz/finish.vue"),
+        },
+        {
             path: "/start",
             component: () => import("./pages/start.vue"),
         },
