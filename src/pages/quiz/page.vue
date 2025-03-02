@@ -43,7 +43,7 @@ async function load(){
         if(!data.ok) return;
 
         page.value = data.response;
-        page.value.question = {
+        /*page.value.question = {
             questionType: "",
             metadata: {
                 canEdit: false,
@@ -58,7 +58,7 @@ async function load(){
                 memorizationTip: "lol",
                 questionText: "Какие условия были оговорены при подписании грамоты о принятии Младшего жуза в состав России?"
             }
-        }
+        }*/
     } catch (err) {
         console.error(err);
     }
