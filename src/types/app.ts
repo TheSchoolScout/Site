@@ -4,8 +4,7 @@ declare global {
         rank: "user" | "admin";
         name: string;
         surname: string;
-        is_testing: boolean;
-        is_daily_available: boolean;
+        uuid: string;
     }
     
     interface Question {
@@ -28,5 +27,31 @@ declare global {
         startTime: string | null;
         endTime: string | null;
         timeLimit: number;
+    }
+
+    interface Theme {
+        id: number;
+        title: string;
+        questions_count: number;
+    }
+
+    interface BottomButton {
+        text: string;
+        path?: string;
+    }
+
+    interface HistoryItem {
+        id: number;
+        status: "pending";
+        linked_user: User;
+        metadata: {
+            title: string;
+            questions: Question[];
+        };
+        time_start: string;
+        time_taken: string;
+        time_limit: string;
+        questions_count: number;
+        correct_answers: number;
     }
 }

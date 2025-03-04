@@ -14,7 +14,7 @@ export default defineConfig({
     },
 	server: {
 		allowedHosts: [
-			process.env.DEV_SERVER_HOST || ""
+			process.env.DEV_SERVER_HOST || "test.rule35-1.ru"
 		]
 	}
 });

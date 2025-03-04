@@ -23,6 +23,7 @@ interface InitRequestParams {
 
 interface InitRequestResponse {
     token: string;
+    user: User;
     is_testing: boolean;
     is_daily_available: boolean;
 }
@@ -73,6 +74,18 @@ interface GetMeRequestResponse {
     user: User;
 }
 
+interface GetThemesRequestResponse {
+    themes: Theme[]
+}
+
+interface GetHistoryRequestParams {
+    offset?: number;
+}
+
+interface GetHistoryRequestResponse {
+    history: HistoryItem[]
+}
+
 type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
 
 export class Api {
@@ -117,8 +130,16 @@ export class Api {
     };
 
     public getMe = () => {
-        return request<undefined, ApiResponse<GetMeRequestResponse>>("getMe", "GET");
+        return request<undefined, ApiResponse<GetMeRequestResponse>>("me", "GET");
     };
+
+    public getThemes = () => {
+        return request<undefined, ApiResponse<GetThemesRequestResponse>>("themes", "GET");
+    }
+
+    public getHistory = () => {
+        return request<GetHistoryRequestParams, ApiResponse<GetHistoryRequestResponse>>("me/history", "GET");
+    }
 }
 
 function request<T, K>(route: string, method: RequestMethod, data?: T): Promise<K | ErrorResponse> {

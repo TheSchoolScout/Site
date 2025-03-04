@@ -2,7 +2,6 @@
     <div class="page">
         <div class="buttons-container">
             <Button @click="startRandom">Случайный</Button>
-            <RouterLink class="btn" to="/"><Button>Назад</Button></RouterLink>
         </div>
         <div class="logo">SchoolScout</div>
     </div>
@@ -11,9 +10,15 @@
 import { Api } from '../api';
 import Button from '../components/UI/Button.vue';
 import { useRouter } from 'vue-router';
+import { useAppStore } from '../stores/app';
+import { storeToRefs } from 'pinia';
+import { onMounted, onUnmounted } from 'vue';
 
 const api = new Api();
 const router = useRouter();
+const app = useAppStore();
+
+const { bottomButtons } = storeToRefs(app);
 
 async function startRandom(){
     try {
@@ -25,6 +30,17 @@ async function startRandom(){
         console.error(err);
     }
 }
+
+onMounted(() => {
+    app.addBottomButton({
+        text: "Назад",
+        path: "/"
+    })
+})
+
+onUnmounted(() => {
+    bottomButtons.value = [];
+})
 </script>
 <style lang="scss">
 @use "../assets/scss/page" as *;

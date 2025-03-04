@@ -1,14 +1,28 @@
 <template>
-	<RouterView/>
+    <template v-if="isLoading">
+	    <div class="loading">
+            <div class="loader">загрузка...</div>
+        </div>
+    </template>
+    <template v-else-if="!fatalError.message.length">
+        <Suspense>
+            <RouterView/>
+        </Suspense>
+        <BottomButtons/>
+    </template>
+    <template v-else>
+        <ErrorPage/>
+    </template>
 </template>
 
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router';
 import { Api } from './api';
 import eventBus from "./eventBus";
-import { watch } from "vue";
+import { defineAsyncComponent, watch } from "vue";
 import { useAppStore } from './stores/app';
 import { storeToRefs } from 'pinia';
+import BottomButtons from './components/UI/BottomButtons.vue';
 
 const api = new Api();
 
@@ -16,7 +30,7 @@ const router = useRouter();
 const route = useRoute();
 const app = useAppStore();
 
-const { currentUser, token } = storeToRefs(app);
+const { currentUser, token, isLoading, fatalError } = storeToRefs(app);
 
 async function initTelegramApp() {
     try {
@@ -47,12 +61,20 @@ async function initApp(initData: string){
 
         token.value = data.response.token;
 
-        if(!data.response.is_testing && ["/quiz/start", "/quiz/page"].includes(window.location.pathname)) window.location.pathname = "/";
+        if (!data.response.is_testing && ["/quiz/start", "/quiz/page"].includes(window.location.pathname)) window.location.pathname = "/";
+
+        isLoading.value = false;
     } catch (error: any) {
+        isLoading.value = false;
         if(error.data && !error.data.ok){
             switch(error.data.response.exception){
                 case "ERR_ACCOUNT_NOT_FOUND":
+                case "ERR_ACCOUNT_NOT_REGISTERED":
                     router.replace("/register");
+                    break;
+                default:
+                    fatalError.value.message = error.data.response.description;
+                    break;
             }
         }
     }
@@ -78,8 +100,19 @@ eventBus.on("reloadInit", () => {
 })
 
 window.onload = () => initTelegramApp();
+
+const ErrorPage = defineAsyncComponent(() => import("./pages/error.vue"));
 </script>
 
 <style lang="scss">
 @use "./assets/scss/app" as *;
+</style>
+<style lang="scss" scoped>
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    height: 100dvh;
+}
 </style>

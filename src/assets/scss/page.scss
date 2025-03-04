@@ -7,4 +7,13 @@
     margin: 0 auto;
     padding: 16px;
     gap: 8px;
+
+    .link-button {
+        text-decoration: none;
+        color: var(--color-btn-text);
+
+        button {
+            width: 100%;
+        }
+    }
 }
