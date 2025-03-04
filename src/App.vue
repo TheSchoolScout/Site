@@ -30,7 +30,7 @@ const router = useRouter();
 const route = useRoute();
 const app = useAppStore();
 
-const { currentUser, token, isLoading, fatalError } = storeToRefs(app);
+const { me, token, isLoading, fatalError } = storeToRefs(app);
 
 async function initTelegramApp() {
     try {
@@ -57,11 +57,11 @@ async function initApp(initData: string){
         const data = await api.init({initData: initData});
         if(!data.ok) return;
 
-        if(["/qr", "/register"].includes(window.location.pathname)) window.location.pathname = "/";
+        router.replace("/");
 
         token.value = data.response.token;
 
-        if (!data.response.is_testing && ["/quiz/start", "/quiz/page"].includes(window.location.pathname)) window.location.pathname = "/";
+        if(data.response.is_testing) router.replace("/quiz/page");
 
         isLoading.value = false;
     } catch (error: any) {
@@ -70,6 +70,7 @@ async function initApp(initData: string){
             switch(error.data.response.exception){
                 case "ERR_ACCOUNT_NOT_FOUND":
                 case "ERR_ACCOUNT_NOT_REGISTERED":
+                    if(route.path == "/qr") break;
                     router.replace("/register");
                     break;
                 default:
@@ -81,7 +82,7 @@ async function initApp(initData: string){
 }
 
 watch(() => route.path, async (newPath) => {
-    if(!/^\/quiz/.test(newPath)) return;
+    if(newPath == "/quiz/page") return;
 
     if(!token.value.length) return;
 
@@ -89,7 +90,7 @@ watch(() => route.path, async (newPath) => {
         const data = await api.getMe();
         if(!data.ok) return;
         
-        currentUser.value = data.response.user;
+        me.value = data.response;
     } catch (error) {
         console.error(error);
     }
@@ -99,7 +100,7 @@ eventBus.on("reloadInit", () => {
     initApp(window.Telegram.WebApp.initData);
 })
 
-window.onload = () => initTelegramApp();
+window.onload = async () => await initTelegramApp();
 
 const ErrorPage = defineAsyncComponent(() => import("./pages/error.vue"));
 </script>

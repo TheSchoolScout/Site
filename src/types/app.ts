@@ -37,6 +37,7 @@ declare global {
 
     interface BottomButton {
         text: string;
+        action?: () => void;
         path?: string;
     }
 

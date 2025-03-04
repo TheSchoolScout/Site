@@ -28,13 +28,11 @@ export const useAppStore = defineStore("app", () => {
         }
     }
 
-    const currentUser = ref<User>({
-        user_id: 0,
-        rank: "user",
-        name: "",
-        surname: "",
-        uuid: ""
-    });
+    const me = ref<{
+        user: User;
+        is_daily_available: boolean;
+        is_testing: boolean;
+    }>();
 
     return {
         confirmToken,
@@ -49,6 +47,6 @@ export const useAppStore = defineStore("app", () => {
 
         quizResults,
 
-        currentUser,
+        me,
     };
 });

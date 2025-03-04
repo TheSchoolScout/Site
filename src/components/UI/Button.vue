@@ -1,6 +1,11 @@
 <template>
-    <button><slot/></button>
+    <button :class="{disabled: props.disabled}" :disabled="props.disabled"><slot/></button>
 </template>
+<script lang="ts" setup>
+const props = defineProps<{
+    disabled?: boolean;
+}>()
+</script>
 <style lang="scss" scoped>
 button {
     display: flex;
@@ -17,6 +22,11 @@ button {
     cursor: pointer;
     transition: 0.3s;
     user-select: none;
+
+    &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 
     &:hover{
         background-color: var(--color-btn-secondary);

@@ -2,10 +2,10 @@
     <div class="bottom-buttons">
         <template v-for="button in bottomButtons">
             <template v-if="button.path">
-                <RouterLink :to="button.path"><Button>{{ button.text }}</Button></RouterLink>
+                <RouterLink :to="button.path"><Button @click="button.action && button.action()">{{ button.text }}</Button></RouterLink>
             </template>
             <template v-else>
-                <Button>{{ button.text }}</Button>
+                <Button @click="button.action && button.action()">{{ button.text }}</Button>
             </template>
         </template>
     </div>
@@ -29,6 +29,7 @@ const { bottomButtons } = storeToRefs(app);
 
     button {
         border-radius: unset;
+        width: 100%;
     }
 
     a {

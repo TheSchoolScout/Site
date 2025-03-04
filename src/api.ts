@@ -32,6 +32,7 @@ interface RegisterRequestParams {
     initData: string;
     name: string;
     surname: string;
+    gender: "male" | "female";
 }
 
 interface RegisterRequestResponse {
@@ -72,6 +73,8 @@ interface QuizRandomRequestParams {
 
 interface GetMeRequestResponse {
     user: User;
+    is_daily_available: boolean;
+    is_testing: boolean;
 }
 
 interface GetThemesRequestResponse {

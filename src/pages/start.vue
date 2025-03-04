@@ -2,6 +2,7 @@
     <div class="page">
         <div class="buttons-container">
             <Button @click="startRandom">Случайный</Button>
+            <Button @click="startDaily" :disabled="!me?.is_daily_available">Тест дня</Button>
         </div>
         <div class="logo">SchoolScout</div>
     </div>
@@ -18,14 +19,25 @@ const api = new Api();
 const router = useRouter();
 const app = useAppStore();
 
-const { bottomButtons } = storeToRefs(app);
+const { bottomButtons, me } = storeToRefs(app);
 
 async function startRandom(){
     try {
         const data = await api.randomQuiz({count: 20});
         if(!data.ok) return;
 
-        router.replace("/quiz/start");
+        router.replace("/quiz/page");
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function startDaily(){
+    try {
+        const data = await api.dailyQuiz();
+        if(!data.ok) return;
+
+        router.replace("/quiz/page");
     } catch (err) {
         console.error(err);
     }

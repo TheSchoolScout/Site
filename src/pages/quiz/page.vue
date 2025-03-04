@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <template v-if="page">
+        <template v-if="page && page.question">
             <header class="question-info">
                 <div class="counters">
                     <div class="timer">0:29</div>
@@ -8,10 +8,27 @@
                 </div>
                 <div class="question">{{ page.question.metadata.questionText }}</div>
             </header>
-            <SelectBox :question="page.question" v-model="selected"/>
+            <fieldset class="memorization-tip" v-if="page.question.metadata.memorizationTip">
+                <legend>Как запомнить?</legend>
+                <div>{{ page.question.metadata.memorizationTip }}</div>
+            </fieldset>
+            <SelectBox :question="page.question" :correct="page.question.metadata.correctOptionIndex" :disabled="page.question.metadata.correctOptionIndex != null" v-model="selected"/>
+            
+            <Button @click="next">Далее</Button>
+            <Button @click="stop">Завершить досрочно</Button>
         </template>
-        <Button @click="answer">Далее</Button>
-        <Button @click="stop">Завершить досрочно</Button>
+        <template v-else>
+            <ul>
+                <li>Общее количество заданий: {{ page?.quiz.totalQuestions }}</li>
+                <li>Время прохождения теста: {время в секундах} секунд ({время в минутах} минут)</li>
+                <li>Ответы на задания необходимо давать в последовательном порядке</li>
+                <li>Ответ к каждому заданию отобразится после его подтверждения</li>
+                <li>По завершении теста ваш результат будет сохранён и станет доступен для просмотра другими участниками</li>
+            </ul>
+            <p class="confirmation">Я подтверждаю, что ознакомился(-лась) с правилами тестирования и даю согласие на его прохождение.</p>
+
+            <Button @click="next">Начать</Button>
+        </template>
     </div>
 </template>
 <script lang="ts" setup>
@@ -32,9 +49,23 @@ const router = useRouter();
 
 const page = ref<{
     quiz: Quiz;
-    question: Question;
+    question: Question | null;
 }>();
-const selected = ref<number>();
+const selected = ref<number | null>(null);
+
+watch(selected, async (choice) => {
+    if(!page.value || !selected.value || choice == null) return;
+    try {
+        const data = await api.answerQuiz({
+            page: page.value.quiz.currentPage,
+            answer: choice
+        })
+
+        if(!data.ok) return;
+    } catch (err) {
+        console.error(err);
+    }
+})
 
 async function load(){
     try {
@@ -43,42 +74,26 @@ async function load(){
         if(!data.ok) return;
 
         page.value = data.response;
-        /*page.value.question = {
-            questionType: "",
-            metadata: {
-                canEdit: false,
-                correctOptionIndex: 0,
-                selectedOption: null,
-                options: [
-                    "Казахи должны были платить ясак, Россия обещала защиту от врагов, прекращение набегов.",
-                    "Казахи получали право беспошлинной торговли с Россией.",
-                    "Казахи становились полноправными гражданами Российской империи.",
-                    "Казахи сохраняли полную независимость во внутренних делах."
-                ],
-                memorizationTip: "lol",
-                questionText: "Какие условия были оговорены при подписании грамоты о принятии Младшего жуза в состав России?"
-            }
-        }*/
+
+        if(!data.response.question) return;
+        
+        selected.value = data.response.question.metadata.selectedOption;
     } catch (err) {
         console.error(err);
     }
 }
 
-async function answer(){
-    if(!page.value || !selected.value) return;
-    try {
-        const dataAnswer = await api.answerQuiz({
-            page: page.value.quiz.currentPage,
-            answer: selected.value
-        })
-        const dataNext = await api.getQuizNextPage();
-
-        if(!dataAnswer.ok || !dataNext.ok) return;
-
-        page.value = dataNext.response;
-    } catch (err) {
-        console.error(err);
+async function next(){
+    if((page.value!.quiz.currentPage + 1) == page.value!.quiz.totalQuestions){
+        await stop();
+        return;
     }
+    const data = await api.getQuizNextPage();
+
+    if(!data.ok) return;
+
+    page.value = data.response;
+    if(data.response.question) selected.value = data.response.question.metadata.selectedOption;
 }
 
 async function stop(){
@@ -117,6 +132,18 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
 }
+
+ul {
+    padding-left: 2rem;
+    li {
+        list-style: decimal;
+    }
+}
+
+.confirmation {
+    font-size: 0.9rem;
+}
+
 .question-info {
     .question {
         font-size: 1.4rem;
@@ -136,6 +163,16 @@ onMounted(async () => {
         .timer {
             flex: 1;
         }
+    }
+}
+
+.memorization-tip {
+    border-radius: 8px;
+    border: 1.5px solid var(--color-hint);
+    margin-bottom: 8px;
+
+    legend {
+        color: var(--color-hint);
     }
 }
 </style>
