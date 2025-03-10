@@ -12,12 +12,12 @@
                 <legend>Как запомнить?</legend>
                 <div>{{ page.question.metadata.memorizationTip }}</div>
             </fieldset>
-            <SelectBox :question="page.question" :correct="page.question.metadata.correctOptionIndex" :disabled="page.question.metadata.correctOptionIndex != null" v-model="selected"/>
+            <SelectBox :question="page.question" :quiz="page.quiz"/>
             
             <Button @click="next">Далее</Button>
             <Button @click="stop">Завершить досрочно</Button>
         </template>
-        <template v-else>
+        <template v-else-if="page?.quiz.currentPage == -1">
             <ul>
                 <li>Общее количество заданий: {{ page?.quiz.totalQuestions }}</li>
                 <li>Время прохождения теста: {время в секундах} секунд ({время в минутах} минут)</li>
@@ -51,21 +51,6 @@ const page = ref<{
     quiz: Quiz;
     question: Question | null;
 }>();
-const selected = ref<number | null>(null);
-
-watch(selected, async (choice) => {
-    if(!page.value || !selected.value || choice == null) return;
-    try {
-        const data = await api.answerQuiz({
-            page: page.value.quiz.currentPage,
-            answer: choice
-        })
-
-        if(!data.ok) return;
-    } catch (err) {
-        console.error(err);
-    }
-})
 
 async function load(){
     try {
@@ -76,8 +61,6 @@ async function load(){
         page.value = data.response;
 
         if(!data.response.question) return;
-        
-        selected.value = data.response.question.metadata.selectedOption;
     } catch (err) {
         console.error(err);
     }
@@ -93,7 +76,6 @@ async function next(){
     if(!data.ok) return;
 
     page.value = data.response;
-    if(data.response.question) selected.value = data.response.question.metadata.selectedOption;
 }
 
 async function stop(){
