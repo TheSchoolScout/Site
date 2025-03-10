@@ -1,12 +1,17 @@
 <template>
     <template v-if="isLoading">
 	    <div class="loading">
-            <div class="loader">загрузка...</div>
+            <ProgressBar/>
         </div>
     </template>
     <template v-else-if="!fatalError.message.length">
         <Suspense>
             <RouterView/>
+            <template #fallback>
+                <div class="loading">
+                    <ProgressBar/>
+                </div>
+            </template>
         </Suspense>
         <BottomButtons/>
     </template>
@@ -23,6 +28,7 @@ import { defineAsyncComponent, watch } from "vue";
 import { useAppStore } from './stores/app';
 import { storeToRefs } from 'pinia';
 import BottomButtons from './components/UI/BottomButtons.vue';
+import ProgressBar from './components/UI/ProgressBar.vue';
 
 const api = new Api();
 
