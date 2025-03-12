@@ -3,19 +3,29 @@
         <div class="stat-container">
             <div class="circle">{{ quizResults.correctAnswers }} из {{ quizResults.totalQuestions }}</div>
         </div>
-        <Button @click="router.replace('/')">Закрыть</Button>
     </div>
 </template>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { useAppStore } from '../../stores/app';
-import Button from '../../components/UI/Button.vue';
+import { onMounted, onUnmounted } from 'vue';
 
 const app = useAppStore();
 const router = useRouter();
 
-const { quizResults } = storeToRefs(app);
+const { quizResults, bottomButtons } = storeToRefs(app);
+
+onMounted(() => {
+    app.addBottomButton({
+        text: "Завершить",
+        action: () => router.replace("/")
+    })
+})
+
+onUnmounted(() => {
+    bottomButtons.value = [];
+})
 </script>
 <style lang="scss">
 @use "../../assets/scss/page" as *;

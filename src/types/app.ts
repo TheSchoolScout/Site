@@ -24,8 +24,8 @@ declare global {
         type: "personal" | "group" | "daily";
         title: string | null;
         totalQuestions: number;
-        startTime: string | null;
-        endTime: string | null;
+        startTime: string;
+        endTime: string;
         timeLimit: number;
     }
 
@@ -39,6 +39,7 @@ declare global {
         text: string;
         action?: () => void;
         path?: string;
+        disabled?: boolean;
     }
 
     interface HistoryItem {

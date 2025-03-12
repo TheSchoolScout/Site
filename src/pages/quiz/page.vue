@@ -2,9 +2,12 @@
     <div class="page">
         <template v-if="page && page.question">
             <header class="question-info">
-                <div class="counters">
-                    <div class="timer">0:29</div>
-                    <div class="step">{{ (page.quiz.currentPage + 1) }}/{{ page.quiz.totalQuestions }}</div>
+                <div class="indicators">
+                    <button class="stop" @click="stop"><Icon icon="material-symbols:close"/></button>
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="timer">{{ timeLeft() }}</div>
                 </div>
                 <div class="question">{{ page.question.metadata.questionText }}</div>
             </header>
@@ -13,9 +16,6 @@
                 <div>{{ page.question.metadata.memorizationTip }}</div>
             </fieldset>
             <SelectBox :question="page.question" :quiz="page.quiz"/>
-            
-            <Button @click="next">Далее</Button>
-            <Button @click="stop">Завершить досрочно</Button>
         </template>
         <template v-else-if="page?.quiz.currentPage == -1">
             <ul>
@@ -26,24 +26,22 @@
                 <li>По завершении теста ваш результат будет сохранён и станет доступен для просмотра другими участниками</li>
             </ul>
             <p class="confirmation">Я подтверждаю, что ознакомился(-лась) с правилами тестирования и даю согласие на его прохождение.</p>
-
-            <Button @click="next">Начать</Button>
         </template>
     </div>
 </template>
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { Api } from '../../api';
 import { useAppStore } from '../../stores/app';
 import { storeToRefs } from 'pinia';
-import Button from '../../components/UI/Button.vue';
+import { Icon } from "@iconify/vue";
 import SelectBox from '../../components/Quiz/SelectBox.vue';
 
 const api = new Api();
 const app = useAppStore();
 
-const { token, quizResults } = storeToRefs(app);
+const { token, quizResults, bottomButtons } = storeToRefs(app);
 
 const router = useRouter();
 
@@ -59,6 +57,12 @@ async function load(){
         if(!data.ok) return;
 
         page.value = data.response;
+
+        console.log(page.value)
+
+        if (new Date(data.response.quiz.endTime).getTime() <= Date.now()) {
+            return stop();
+        };
 
         if(!data.response.question) return;
     } catch (err) {
@@ -96,15 +100,46 @@ async function stop(){
     }
 }
 
+const timer = ref<NodeJS.Timeout>();
+const now = ref(new Date());
+
 onMounted(async () => {
     if(page.value) return;
 
-    load();
+    await load();
 
     watch(token, () => {
         if(token.value) load();
     });
+
+    app.addBottomButton({
+        text: page.value!.quiz.currentPage == -1 ? "Начать" : "Проверить",
+        disabled: page.value!.question?.metadata.selectedOption != null,
+        action: () => next()
+    })
+
+    timer.value = setInterval(() => {
+        now.value = new Date();
+    }, 1000);
 })
+
+onUnmounted(() => {
+    if (timer.value) clearInterval(timer.value);
+    bottomButtons.value = [];
+})
+
+function timeLeft() {
+    if (!page.value || page.value.quiz.endTime) return "0:00";
+    const quizEnd = new Date(page.value!.quiz.endTime!);
+
+    const ms = quizEnd.getTime() - now.value.getTime();
+
+    const minutes = Math.floor(ms / (1000 * 60));
+    const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+}
 </script>
 <style lang="scss">
 @use "../../assets/scss/page" as *;
@@ -134,16 +169,20 @@ ul {
         margin-bottom: 8px;
     }
 
-    .counters {
+    .indicators {
         display: flex;
         align-items: center;
 
-        .timer, .step {
-            color: var(--color-hint);
+        .progress {
+            flex: 1;
+            .progress-bar {
+                height: 35px;
+                background-color: var(--color-accent);
+            }
         }
 
-        .timer {
-            flex: 1;
+        .timer, .step {
+            color: var(--color-hint);
         }
     }
 }

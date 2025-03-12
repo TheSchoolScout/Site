@@ -42,6 +42,10 @@ const router = createRouter({
             path: "/themes",
             component: () => import("./pages/themes.vue"),
         },
+        {
+            path: "/rating",
+            component: () => import("./pages/rating.vue"),
+        },
     ],
 });
 

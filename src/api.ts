@@ -89,6 +89,10 @@ interface GetHistoryRequestResponse {
     history: HistoryItem[]
 }
 
+interface GetRatingRequestResponse {
+    users: User[];
+}
+
 type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
 
 export class Api {
@@ -142,6 +146,10 @@ export class Api {
 
     public getHistory = () => {
         return request<GetHistoryRequestParams, ApiResponse<GetHistoryRequestResponse>>("me/history", "GET");
+    }
+
+    public getRating = () => {
+        return request<undefined, ApiResponse<GetRatingRequestResponse>>("rating", "GET");
     }
 }
 
