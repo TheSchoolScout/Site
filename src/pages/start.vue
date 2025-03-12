@@ -5,6 +5,7 @@
             <Button @click="startDaily" :disabled="!me?.is_daily_available">Тест дня</Button>
         </div>
         <div class="logo">SchoolScout</div>
+        <BottomButton path="/">Назад</BottomButton>
     </div>
 </template>
 <script lang="ts" setup>
@@ -13,13 +14,13 @@ import Button from '../components/UI/Button.vue';
 import { useRouter } from 'vue-router';
 import { useAppStore } from '../stores/app';
 import { storeToRefs } from 'pinia';
-import { onMounted, onUnmounted } from 'vue';
+import BottomButton from '../components/UI/BottomButton.vue';
 
 const api = new Api();
 const router = useRouter();
 const app = useAppStore();
 
-const { bottomButtons, me } = storeToRefs(app);
+const { me } = storeToRefs(app);
 
 async function startRandom(){
     try {
@@ -42,17 +43,6 @@ async function startDaily(){
         console.error(err);
     }
 }
-
-onMounted(() => {
-    app.addBottomButton({
-        text: "Назад",
-        path: "/"
-    })
-})
-
-onUnmounted(() => {
-    bottomButtons.value = [];
-})
 </script>
 <style lang="scss">
 @use "../assets/scss/page" as *;

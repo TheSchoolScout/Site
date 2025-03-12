@@ -50,9 +50,9 @@ declare global {
             title: string;
             questions: Question[];
         };
-        time_start: string;
-        time_taken: string;
-        time_limit: string;
+        time_start: string | null;
+        time_taken: string | null;
+        time_limit: string | null;
         questions_count: number;
         correct_answers: number;
     }

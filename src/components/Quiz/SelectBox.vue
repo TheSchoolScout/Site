@@ -1,10 +1,14 @@
 <template>
-    <div class="select-box" :class="{disabled: question.metadata.correctOptionIndex != null}">
-        <div v-for="(option, i) in props.question.metadata.options" class="option" :class="{'active': question.metadata.selectedOption == i, 'correct': question.metadata.correctOptionIndex == i}" @click="!question.metadata.correctOptionIndex != null && selectAnswer(i)">{{ option }}</div>
+    <div class="select-box" :class="{disabled: disabled}">
+        <div 
+            v-for="(option, i) in props.question.metadata.options" 
+            class="option" 
+            :class="{'active': question.metadata.selectedOption == i, 'correct': question.metadata.correctOptionIndex == i, 'skeleton-loading': loadingIndex == i}" 
+            @click="!disabled && selectAnswer(i)">{{ option }}</div>
     </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { Api } from "../../api";
 
 const props = defineProps<{
@@ -15,6 +19,12 @@ const props = defineProps<{
 const api = new Api();
 
 const loadingIndex = ref<number>();
+
+const disabled = computed(() => {
+    return props.question.metadata.correctOptionIndex != null 
+    || new Date().getTime() >= new Date(props.quiz.endTime).getTime()
+});
+
 
 async function selectAnswer(i: number){
     loadingIndex.value = i;
@@ -62,6 +72,16 @@ async function selectAnswer(i: number){
 
     &.disabled .option.active:not(.correct){
         border-color: var(--color-error);
+        animation: wrong-answer .9s;
+    }
+}
+
+@keyframes wrong-answer {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transform: translateX(-1px);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(1px);
     }
 }
 </style>

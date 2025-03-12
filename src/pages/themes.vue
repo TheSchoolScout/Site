@@ -6,17 +6,19 @@
                 <div class="questions-count">{{ theme.questions_count }}</div>
             </div>
         </div>
+        <BottomButton path="/">Назад</BottomButton>
     </div>
 </template>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { Api } from '../api';
 import { useAppStore } from '../stores/app';
-import { onUnmounted, ref } from 'vue';
+import { ref } from 'vue';
+import BottomButton from '../components/UI/BottomButton.vue';
 
 const api = new Api();
 const app = useAppStore();
-const { fatalError, bottomButtons } = storeToRefs(app);
+const { fatalError } = storeToRefs(app);
 
 const data = await api.getThemes();
 
@@ -27,16 +29,6 @@ if (data.ok) {
 } else {
     fatalError.value.message = data.response.description;
 }
-
-app.addBottomButton({
-    text: "Назад",
-    path: "/"
-})
-
-onUnmounted(() => {
-    bottomButtons.value = [];
-})
-
 </script>
 <style lang="scss">
 @use "../assets/scss/page" as *;

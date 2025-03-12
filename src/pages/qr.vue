@@ -1,19 +1,19 @@
 <template>
     <div class="page">
         <img :src="qr">
+        <BottomButton @click="check">Проверить</BottomButton>
     </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useAppStore } from '../stores/app';
 import QRCode from "qrcode";
 import eventBus from '../eventBus';
-import { storeToRefs } from 'pinia';
+import BottomButton from '../components/UI/BottomButton.vue';
 
 const app = useAppStore();
 const qr = ref("");
 
-const { bottomButtons } = storeToRefs(app);
 
 onMounted(async () => {
     qr.value = await generateQR();
@@ -29,19 +29,7 @@ function generateQR(){
     })
 }
 
-onMounted(() => {
-    app.addBottomButton({
-        text: "Проверить",
-        action: () => check()
-    });
-})
-
-onUnmounted(() => {
-    bottomButtons.value = [];
-})
-
 function check(){
-    console.log('check');
     eventBus.emit("reloadInit");
 }
 </script>

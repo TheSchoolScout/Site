@@ -1,18 +1,20 @@
 <template>
     <div class="page">
-        {{ history }}
+        <div>{{ history }}</div>
+        <BottomButton path="/">Назад</BottomButton>
     </div>
 </template>
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { useAppStore } from '../stores/app';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { ref } from 'vue';
 import { Api } from '../api';
+import BottomButton from '../components/UI/BottomButton.vue';
 
 const app = useAppStore();
 const api = new Api();
 
-const { bottomButtons, fatalError } = storeToRefs(app);
+const { fatalError } = storeToRefs(app);
 
 const history = ref<HistoryItem[]>([]);
 
@@ -23,15 +25,4 @@ if (data.ok) {
 } else {
     fatalError.value.message = data.response.description;
 }
-
-onMounted(() => {
-    app.addBottomButton({
-        text: "Назад",
-        path: "/"
-    })
-})
-
-onUnmounted(() => {
-    bottomButtons.value = [];
-})
 </script>

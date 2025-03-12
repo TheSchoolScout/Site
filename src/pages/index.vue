@@ -4,6 +4,7 @@
             <RouterLink class="btn" to="/start"><Button>Пройти тест</Button></RouterLink>
             <RouterLink class="btn" to="/themes"><Button>Темы</Button></RouterLink>
             <RouterLink class="btn" to="/history"><Button>История тестов</Button></RouterLink>
+            <RouterLink class="btn" to="/rating"><Button>Рейтинг</Button></RouterLink>
         </div>
         <div class="logo">SchoolScout</div>
     </div>

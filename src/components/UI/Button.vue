@@ -7,28 +7,31 @@ const props = defineProps<{
 }>()
 </script>
 <style lang="scss" scoped>
+@use "../../assets/scss/mixins" as *;
+
 button {
+    @include smooth;
+
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: var(--color-btn);
     border: 1.5px solid var(--color-btn-border);
     color: var(--color-btn-text);
-    outline: none;
     border-radius: 8px;
     height: 45px;
     font-weight: 400;
     font-size: 1.05rem;
-    cursor: pointer;
-    transition: 0.3s;
     user-select: none;
 
     &.disabled {
-        opacity: 0.5;
+        background-color: var(--color-btn-disabled);
+        color: var(--color-btn-disabled-text);
+        border-color: var(--color-btn-disabled-border);
         cursor: not-allowed;
     }
 
-    &:hover{
+    &:not(.disabled):hover{
         background-color: var(--color-btn-secondary);
     }
 }

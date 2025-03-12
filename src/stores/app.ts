@@ -15,19 +15,6 @@ export const useAppStore = defineStore("app", () => {
         message: ""
     })
 
-    const bottomButtons = ref<BottomButton[]>([]);
-
-    function addBottomButton(data: BottomButton) {
-        bottomButtons.value.push(data);
-    }
-
-    function removeBottomButton(text: string) {
-        const i = bottomButtons.value.map(button => button.text).indexOf(text);
-        if (i > -1) {
-            bottomButtons.value.splice(i, 1);
-        }
-    }
-
     const me = ref<{
         user: User;
         is_daily_available: boolean;
@@ -40,10 +27,6 @@ export const useAppStore = defineStore("app", () => {
 
         isLoading,
         fatalError,
-
-        bottomButtons,
-        addBottomButton,
-        removeBottomButton,
 
         quizResults,
 
