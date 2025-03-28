@@ -86,11 +86,32 @@ interface GetHistoryRequestParams {
 }
 
 interface GetHistoryRequestResponse {
-    history: HistoryItem[]
+    history: HistoryItem[];
+    more: boolean;
 }
 
 interface GetRatingRequestResponse {
     users: User[];
+}
+
+interface GetStreakRequestParams {
+    year: number;
+    month: number;
+}
+
+interface GetStreakRequestResponse {
+    streak: string[];
+}
+
+interface GetUserRequestResponse {
+    user: User;
+    is_testing: boolean;
+    is_daily_available: boolean;
+}
+
+interface UpdateUserRequestResponse {
+    rank: "assistant" | "teacher" | "admin" | "none";
+    group_id: number;
 }
 
 type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
@@ -142,15 +163,27 @@ export class Api {
 
     public getThemes = () => {
         return request<undefined, ApiResponse<GetThemesRequestResponse>>("themes", "GET");
-    }
+    };
 
     public getHistory = () => {
         return request<GetHistoryRequestParams, ApiResponse<GetHistoryRequestResponse>>("me/history", "GET");
-    }
+    };
 
     public getRating = () => {
         return request<undefined, ApiResponse<GetRatingRequestResponse>>("rating", "GET");
-    }
+    };
+
+    public getStreak = () => {
+        return request<GetStreakRequestParams, ApiResponse<GetStreakRequestResponse>>("me/streak", "GET");
+    };
+
+    public getUser = (user_id: string) => {
+        return request<undefined, ApiResponse<GetUserRequestResponse>>(`user/${user_id}`, "GET");
+    };
+
+    public updateUser = (user_id: string) => {
+        return request<undefined, ApiResponse<UpdateUserRequestResponse>>(`user/${user_id}`, "PUT");
+    };
 }
 
 function request<T, K>(route: string, method: RequestMethod, data?: T): Promise<K | ErrorResponse> {
@@ -158,7 +191,7 @@ function request<T, K>(route: string, method: RequestMethod, data?: T): Promise<
 
     const { token } = storeToRefs(app);
 
-    return ofetch<K | ErrorResponse>(`https://${import.meta.env.VITE_APP_BACKEND_URL}/api/${route}`, {
+    return ofetch<K | ErrorResponse>(`${import.meta.env.VITE_APP_BACKEND_URL}/${route}`, {
         method: method,
         ...(method != "GET" ? data && { body: data } : data && { query: data }),
         headers: {

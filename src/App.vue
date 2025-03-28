@@ -53,6 +53,7 @@ async function initTelegramApp() {
         
     } catch (error: any) {
         console.error(error);
+        fatalError.value.message = error.data.response.description || error.data.message;
     }
 }
 
@@ -61,9 +62,21 @@ async function initApp(initData: string){
         const data = await api.init({initData: initData});
         if(!data.ok) return;
 
+        me.value = {
+            user: data.response.user,
+            is_daily_available: data.response.is_daily_available,
+            is_testing: data.response.is_testing
+        };
+
         router.replace("/");
 
         token.value = data.response.token;
+
+        if(data.response.user.rank == "none"){
+            router.replace("/register");
+            isLoading.value = false;
+            return;
+        }
 
         if(data.response.is_testing) router.replace("/quiz/page");
 
@@ -81,6 +94,8 @@ async function initApp(initData: string){
                     fatalError.value.message = error.data.response.description;
                     break;
             }
+        } else {
+            fatalError.value.message = (error.data && error.data.response.description) || error.message;
         }
     }
 }
@@ -88,7 +103,9 @@ async function initApp(initData: string){
 watch(() => route.path, async (newPath) => {
     if(newPath == "/quiz/page") return;
 
-    if(!token.value.length) return;
+    if(token.value.length == 0) return;
+
+    if(me.value?.user.rank == "none") return;
 
     try {
         const data = await api.getMe();

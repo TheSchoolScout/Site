@@ -1,12 +1,23 @@
 declare global {
     interface User {
+        avatar: string;
         user_id: number;
-        rank: "user" | "admin";
+        rank: "user" | "assistant" | "teacher" | "admin" | "none";
         name: string;
         surname: string;
         uuid: string;
+        rating: number;
+        streak: number;
+        group: Group;
     }
-    
+
+    type Group = IGroup | null;
+
+    interface IGroup {
+        group_id: number;
+        name: string;
+    }
+
     interface Question {
         questionType: string;
         metadata: {
@@ -18,7 +29,7 @@ declare global {
             canEdit: boolean;
         };
     }
-    
+
     interface Quiz {
         currentPage: number;
         type: "personal" | "group" | "daily";
@@ -44,7 +55,7 @@ declare global {
 
     interface HistoryItem {
         id: number;
-        status: "pending";
+        status: "pending" | "completed";
         linked_user: User;
         metadata: {
             title: string;

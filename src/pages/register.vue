@@ -15,8 +15,7 @@
                 <option value="male">Мужской</option>
                 <option value="female">Женский</option>
             </select>
-
-            <Button @click="register">Продолжить</Button>
+            <BottomButton @click="register">Продолжить</BottomButton>
         </form>
     </div>
 </template>
@@ -24,20 +23,20 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Input from "../components/UI/Input.vue";
-import Button from "../components/UI/Button.vue";
 import { Api } from "../api";
 import { useAppStore } from "../stores/app";
 import { storeToRefs } from "pinia";
+import BottomButton from "../components/UI/BottomButton.vue";
 
 const api = new Api();
 const app = useAppStore();
 
 const router = useRouter();
 
-const { confirmToken } = storeToRefs(app);
+const { confirmToken, me } = storeToRefs(app);
 
-const name = ref("");
-const surName = ref("");
+const name = ref(me.value?.user.name || "");
+const surName = ref(me.value?.user.surname || "");
 const gender = ref<"female" | "male">();
 
 async function register() {
