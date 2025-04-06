@@ -16,4 +16,30 @@
             width: 100%;
         }
     }
+
+    section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        header{
+            .title {
+                font-weight: bold;
+                font-size: 1.1rem;
+            }
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-radius: 8px;
+            background-color: var(--color-bg-secondary);
+        }
+    }
 }

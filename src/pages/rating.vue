@@ -38,13 +38,11 @@
                 </div>
             </div>
         </div>
-        <BottomButton path="/">Назад</BottomButton>
     </div>
 </template>
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
 import { Api } from '../api';
-import BottomButton from '../components/UI/BottomButton.vue';
 import { Icon } from "@iconify/vue";
 
 const api = new Api();

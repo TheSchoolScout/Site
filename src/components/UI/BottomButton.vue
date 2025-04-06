@@ -19,7 +19,7 @@ const props = defineProps<{
 <style lang="scss" scoped>
 .bottom-button {
     position: fixed;
-    bottom: 0;
+    bottom: 60px;
     left: 0;
     right: 0;
     overflow: hidden;

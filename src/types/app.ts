@@ -46,11 +46,15 @@ declare global {
         questions_count: number;
     }
 
-    interface BottomButton {
-        text: string;
-        action?: () => void;
-        path?: string;
-        disabled?: boolean;
+    type ProcessingStatus = "pending" | "processing" | "completed" | "failed";
+
+    interface Processing {
+        processing_id: number;
+        processing_type: "add_topic";
+        status: ProcessingStatus;
+        retries: number;
+        created_at: string;
+        updated_at: string;
     }
 
     interface HistoryItem {

@@ -17,6 +17,7 @@ export interface ErrorResponse {
     };
 }
 
+// /init
 interface InitRequestParams {
     initData: string;
 }
@@ -27,7 +28,7 @@ interface InitRequestResponse {
     is_testing: boolean;
     is_daily_available: boolean;
 }
-
+// /registration
 interface RegisterRequestParams {
     initData: string;
     name: string;
@@ -38,49 +39,53 @@ interface RegisterRequestParams {
 interface RegisterRequestResponse {
     confirm_token: string;
 }
-
+// /quiz/stop
 interface QuizStopRequestResponse {
     correctAnswers: number;
     totalQuestions: number;
 }
-
+// /quiz/answer
 interface QuizAnswerRequestParams {
     page: number;
     answer: number;
 }
-
+// /quiz/page
 interface QuizPageRequestResponse {
     question: Question;
     quiz: Quiz;
 }
-
+// /quiz/page/next
 interface QuizNextPageRequestResponse {
     question: Question;
     quiz: Quiz;
 }
-
+// /quiz/random-theme
 interface QuizRandomThemeRequestParams {
     count: number;
 }
-
+// /quiz/theme/:id
 interface QuizThemeRequestParams {
     count: number;
 }
 
+// /quiz/random
 interface QuizRandomRequestParams {
     count: number;
 }
 
+// /me
 interface GetMeRequestResponse {
     user: User;
     is_daily_available: boolean;
     is_testing: boolean;
 }
 
+// /themes
 interface GetThemesRequestResponse {
     themes: Theme[]
 }
 
+// /me/history
 interface GetHistoryRequestParams {
     offset?: number;
 }
@@ -90,10 +95,12 @@ interface GetHistoryRequestResponse {
     more: boolean;
 }
 
+// /rating
 interface GetRatingRequestResponse {
     users: User[];
 }
 
+// /me/streak
 interface GetStreakRequestParams {
     year: number;
     month: number;
@@ -103,6 +110,7 @@ interface GetStreakRequestResponse {
     streak: string[];
 }
 
+// /user/:id
 interface GetUserRequestResponse {
     user: User;
     is_testing: boolean;
@@ -112,6 +120,29 @@ interface GetUserRequestResponse {
 interface UpdateUserRequestResponse {
     rank: "assistant" | "teacher" | "admin" | "none";
     group_id: number;
+}
+
+// /theme/upload
+interface UploadThemeRequestResponse {
+    processing_id: number;
+}
+
+// /processing/:id
+interface ProcessingRequestResponse {
+    processing: Processing;
+}
+
+// /processing/active
+interface ProcessingActiveRequestResponse {
+    processings: Processing[];
+}
+
+// /processing/closed
+interface ProcessingClosedRequestParams {
+    offset?: number;
+}
+interface ProcessingClosedRequestResponse {
+    processings: Processing[];
 }
 
 type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
@@ -125,6 +156,7 @@ export class Api {
         return request<RegisterRequestParams, ApiResponse<RegisterRequestResponse>>("registration", "PUT", data);
     };
 
+    // quiz
     public stopQuiz = () => {
         return request<undefined, ApiResponse<QuizStopRequestResponse>>("quiz/stop", "POST");
     };
@@ -157,12 +189,18 @@ export class Api {
         return request<QuizRandomRequestParams, ApiResponse<undefined>>("quiz/random", "POST", data);
     };
 
-    public getMe = () => {
-        return request<undefined, ApiResponse<GetMeRequestResponse>>("me", "GET");
-    };
-
+    // themes
     public getThemes = () => {
         return request<undefined, ApiResponse<GetThemesRequestResponse>>("themes", "GET");
+    };
+
+    public uploadTheme = (fd: FormData) => {
+        return request<FormData, ApiResponse<UploadThemeRequestResponse>>("themes/upload", "POST", fd);
+    };
+
+    // user
+    public getMe = () => {
+        return request<undefined, ApiResponse<GetMeRequestResponse>>("me", "GET");
     };
 
     public getHistory = () => {
@@ -183,6 +221,23 @@ export class Api {
 
     public updateUser = (user_id: string) => {
         return request<undefined, ApiResponse<UpdateUserRequestResponse>>(`user/${user_id}`, "PUT");
+    };
+
+    // processing
+    public getProcessing = (processing_id: number) => {
+        return request<undefined, ApiResponse<ProcessingRequestResponse>>(`processing/${processing_id}`, "GET");
+    };
+
+    public getActiveProcessings = () => {
+        return request<undefined, ApiResponse<ProcessingActiveRequestResponse>>("processing/active", "GET");
+    };
+
+    public getClosedProcessings = (data?: ProcessingClosedRequestParams) => {
+        return request<ProcessingClosedRequestParams, ApiResponse<ProcessingClosedRequestResponse>>(
+            "processing/closed",
+            "GET",
+            data
+        );
     };
 }
 

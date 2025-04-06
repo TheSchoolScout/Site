@@ -13,6 +13,7 @@
                 </div>
             </template>
         </Suspense>
+        <BottomBar v-if="!['/quiz/page', '/quiz/finish'].includes(route.path)"/>
     </template>
     <template v-else>
         <ErrorPage/>
@@ -27,6 +28,7 @@ import { defineAsyncComponent, watch } from "vue";
 import { useAppStore } from './stores/app';
 import { storeToRefs } from 'pinia';
 import ProgressBar from './components/UI/ProgressBar.vue';
+import BottomBar from './components/BottomBar.vue';
 
 const api = new Api();
 

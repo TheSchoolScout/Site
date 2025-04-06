@@ -1,3 +1,11 @@
-@mixin smooth {
-    transition: 0.3s ease-in-out all;
+@mixin smooth($scope: all) {
+    transition: 0.3s ease-in-out $scope;
+}
+
+@mixin ripple {
+    @include smooth(background-color);
+    
+    &:hover{
+        background-color: var(--color-ripple);
+    }
 }

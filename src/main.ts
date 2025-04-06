@@ -46,6 +46,14 @@ const router = createRouter({
             path: "/rating",
             component: () => import("./pages/rating.vue"),
         },
+        {
+            path: "/admin",
+            component: () => import("./pages/admin/index.vue"),
+        },
+        {
+            path: "/admin/upload",
+            component: () => import("./pages/admin/upload.vue"),
+        },
     ],
 });
 
