@@ -11,11 +11,13 @@
             <header>
                 <div class="title">Архив тестов</div>
             </header>
+            <HistoryList/>
         </section>
     </div>
 </template>
 <script lang="ts" setup>
 import Header from '../components/Main/Header.vue';
+import HistoryList from '../components/Main/HistoryList.vue';
 import TasksMenu from '../components/Main/TasksMenu.vue';
 </script>
 <style lang="scss">

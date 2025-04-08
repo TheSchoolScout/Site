@@ -203,8 +203,8 @@ export class Api {
         return request<undefined, ApiResponse<GetMeRequestResponse>>("me", "GET");
     };
 
-    public getHistory = () => {
-        return request<GetHistoryRequestParams, ApiResponse<GetHistoryRequestResponse>>("me/history", "GET");
+    public getHistory = (data?: GetHistoryRequestParams) => {
+        return request<GetHistoryRequestParams, ApiResponse<GetHistoryRequestResponse>>("me/history", "GET", data);
     };
 
     public getRating = () => {

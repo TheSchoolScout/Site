@@ -13,7 +13,7 @@ import { Api } from "../../api";
 
 const props = defineProps<{
     question: Question;
-    quiz: Quiz;
+    quiz?: Quiz;
 }>();
 
 const api = new Api();
@@ -21,12 +21,14 @@ const api = new Api();
 const loadingIndex = ref<number>();
 
 const disabled = computed(() => {
-    return props.question.metadata.correctOptionIndex != null 
-    || new Date().getTime() >= new Date(props.quiz.endTime).getTime()
+    return props.quiz && (props.question.metadata.correctOptionIndex != null 
+    || new Date().getTime() >= new Date(props.quiz.endTime).getTime())
 });
 
 
-async function selectAnswer(i: number){
+async function selectAnswer(i: number) {
+    if (!props.quiz) return;
+    
     loadingIndex.value = i;
 
     try {

@@ -1,27 +1,27 @@
 <template>
     <div class="tasks">
-        <div class="item" @click="selectTask('daily')">
+        <div class="item" :class="{disabled: !me?.is_daily_available}" @click="selectTask('daily')">
             <div class="icon">
                 <img src="../../assets/img/tasks/daily.png" height="36px" width="36px"/>
             </div>
             <div class="text">Задача дня</div>
             <Icon icon="material-symbols:arrow-forward-ios-rounded" class="arrow"/>
         </div>
-        <div class="item">
+        <div class="item" @click="selectTask('random')">
             <div class="icon">
                 <img src="../../assets/img/tasks/random.png" height="36px" width="36px"/>
             </div>
             <div class="text">Случайные вопросы</div>
             <Icon icon="material-symbols:arrow-forward-ios-rounded" class="arrow"/>
         </div>
-        <div class="item">
+        <div class="item" @click="selectTask('random-theme')">
             <div class="icon">
                 <img src="../../assets/img/tasks/random-themed.png" height="36px" width="36px"/>
             </div>
             <div class="text">Случайные вопросы по теме</div>
             <Icon icon="material-symbols:arrow-forward-ios-rounded" class="arrow"/>
         </div>
-        <div class="item">
+        <div class="item" @click="selectTask('random-themed')">
             <div class="icon">
                 <img src="../../assets/img/tasks/random-theme.png" height="36px" width="36px"/>
             </div>
@@ -35,7 +35,12 @@ import { Icon } from '@iconify/vue';
 import { useRouter } from 'vue-router';
 
 import { Api } from '../../api';
+import { useAppStore } from '../../stores/app';
+import { storeToRefs } from 'pinia';
 const api = new Api();
+
+const app = useAppStore();
+const { me } = storeToRefs(app);
 
 const router = useRouter();
 
@@ -45,6 +50,8 @@ async function selectTask(task: Task){
     try {
         switch (task) {
             case 'daily':
+                if (!me.value?.is_daily_available) return;
+                
                 const daily = await api.dailyQuiz();
                 if(!daily.ok) throw new Error("Failed to fetch daily quiz");
 
@@ -57,7 +64,6 @@ async function selectTask(task: Task){
                 router.replace("/quiz/page");
                 break;
             case 'random-themed':
-                // Navigate to random themed task page
                 break;
             case 'random-theme':
                 const randomTheme = await api.randomQuizTheme({count: 20});
@@ -78,7 +84,6 @@ async function selectTask(task: Task){
     overflow: hidden;
 
     .item {
-        @include ripple;
         display: flex;
         align-items: center;
         padding: 8px 12px;
@@ -87,6 +92,15 @@ async function selectTask(task: Task){
 
         &:not(:last-child){
             border-bottom: 1.5px solid var(--color-border);
+        }
+
+        &.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        &:not(.disabled){
+            @include ripple;
         }
 
         .icon {
