@@ -19,6 +19,10 @@
             <BottomButton @click="next" :disabled="!isGoingNextAvailable">{{ currentStage == "check" || isTimeOver ? 'Далее' : 'Проверить' }}</BottomButton>
         </template>
         <template v-else-if="page?.quiz.currentPage == -1">
+            <header class="start-header">
+                <button class="stop" @click="stop(false)"><Icon icon="material-symbols:close" height="2rem" width="2rem"/></button>
+                <div class="title">Начать тест?</div>
+            </header>
             <ul>
                 <li>Общее количество заданий: {{ page.quiz.totalQuestions }}</li>
                 <li>Время прохождения теста: {{ testTime(page.quiz.timeLimit) }}</li>
@@ -111,7 +115,7 @@ async function next(){
     page.value = data.response;
 }
 
-async function stop(){
+async function stop(goToFinish: boolean = true){
     if(!page.value) return;
     try {
         const data = await api.stopQuiz()
@@ -123,7 +127,11 @@ async function stop(){
             totalQuestions: data.response.totalQuestions
         }
 
-        router.replace("/quiz/finish");
+        if(goToFinish){
+            router.replace("/quiz/finish");
+        } else {
+            router.replace("/");
+        }
     } catch (err) {
         console.error(err);
     }
@@ -190,11 +198,6 @@ function timeLeft() {
 @use "../../assets/scss/page" as *;
 @use "../../assets/scss/mixins" as *;
 
-.page {
-    display: flex;
-    flex-direction: column;
-}
-
 ul {
     padding-left: 2rem;
     li {
@@ -204,6 +207,27 @@ ul {
 
 .confirmation {
     font-size: 0.9rem;
+}
+
+.start-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .title {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: var(--color-title);
+    }
+}
+
+.stop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--color-text);
 }
 
 .question-info {
@@ -218,12 +242,6 @@ ul {
         display: flex;
         align-items: center;
         gap: 8px;
-
-        .stop {
-            width: 2rem;
-            height: 2rem;
-            color: var(--color-text);
-        }
 
         .progress {
             flex: 1;

@@ -7,6 +7,7 @@
     margin: 0 auto;
     padding: 16px;
     gap: 8px;
+    padding-bottom: 64px;
 
     .link-button {
         text-decoration: none;
@@ -37,7 +38,6 @@
         .container {
             display: flex;
             flex-direction: column;
-            gap: 8px;
             border-radius: 8px;
             background-color: var(--color-bg-secondary);
         }
