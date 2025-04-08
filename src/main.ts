@@ -35,10 +35,6 @@ const router = createRouter({
             component: () => import("./pages/qr.vue"),
         },
         {
-            path: "/history",
-            component: () => import("./pages/history.vue"),
-        },
-        {
             path: "/themes",
             component: () => import("./pages/themes.vue"),
         },
