@@ -15,9 +15,17 @@ interface Window {
 
             initData: string;
             initDataUnsafe: object;
+            BackButton: {
+                hide: () => void;
+                show: () => void;
+                onClick: (callback: () => void) => void;
+                offClick: (callback: () => void) => void;
+            };
             SettingsButton: {
                 isVisible: boolean;
             };
+
+            platform: string;
 
             setHeaderColor: (color: string) => void;
             setBackgroundColor: (color: string) => void;

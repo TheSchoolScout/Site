@@ -11,8 +11,10 @@
 import Button from '../../components/UI/Button.vue';
 import { Api } from '../../api';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const api = new Api();
+const router = useRouter();
 
 const processing = ref<Processing>();
 let processingCheck: NodeJS.Timeout | null = null;
@@ -64,6 +66,12 @@ async function checkProcessing(){
             break;
     }
 }
+
+window.Telegram.WebApp.BackButton.onClick(() => {
+    router.replace("/admin");
+    window.Telegram.WebApp.BackButton.hide();
+});
+window.Telegram.WebApp.BackButton.show();
 </script>
 <style lang="scss" scoped>
 @use "../../assets/scss/page" as *;

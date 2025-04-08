@@ -9,6 +9,11 @@
     box-sizing: border-box;
     font-family: "Inter";
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    overflow-y: scroll;
 }
 
 html, body {

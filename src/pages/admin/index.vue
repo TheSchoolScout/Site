@@ -15,7 +15,18 @@
 <script lang="ts" setup>
 import ProcessingList from '../../components/Admin/ProcessingList.vue';
 import Button from '../../components/UI/Button.vue';
+import { useRouter } from 'vue-router';
+import { useAppStore } from '../../stores/app';
+import { storeToRefs } from 'pinia';
 
+const app = useAppStore();
+const { me } = storeToRefs(app);
+
+const router = useRouter();
+
+if(me.value?.user.rank != "admin"){
+    router.replace("/");
+}
 </script>
 <style lang="scss" scoped>
 @use "../../assets/scss/page" as *;

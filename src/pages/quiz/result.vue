@@ -29,6 +29,12 @@ if (!data.ok) {
 } else {
     questions.value = data.response.history[0].metadata.questions;
 }
+
+window.Telegram.WebApp.BackButton.onClick(() => {
+    router.replace("/");
+    window.Telegram.WebApp.BackButton.hide();
+});
+window.Telegram.WebApp.BackButton.show();
 </script>
 <style lang="scss" scoped>
 @use "../../assets/scss/page" as *;

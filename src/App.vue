@@ -47,6 +47,8 @@ async function initTelegramApp() {
         const tg = window.Telegram.WebApp;
         tg.SettingsButton.isVisible = true;
 
+        tg.disableVerticalSwipes();
+
         tg.setHeaderColor("#1f1f1f");
         tg.setBackgroundColor("#1f1f1f");
         tg.setBottomBarColor("#1f1f1f");
