@@ -31,10 +31,6 @@ const router = createRouter({
             component: () => import("./pages/quiz/result.vue"),
         },
         {
-            path: "/start",
-            component: () => import("./pages/start.vue"),
-        },
-        {
             path: "/qr",
             component: () => import("./pages/qr.vue"),
         },
