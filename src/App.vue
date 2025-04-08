@@ -5,14 +5,18 @@
         </div>
     </template>
     <template v-else-if="!fatalError.message.length">
-        <Suspense>
-            <RouterView/>
-            <template #fallback>
-                <div class="loading">
-                    <ProgressBar/>
+        <RouterView v-slot="{Component, route}">
+            <Suspense>
+                <div>
+                    <component :is="Component" :key="route.path"/>
                 </div>
-            </template>
-        </Suspense>
+                <template #fallback>
+                    <div class="loading">
+                        <ProgressBar/>
+                    </div>
+                </template>
+            </Suspense>
+        </RouterView>
         <BottomBar v-if="!['/quiz/page', '/quiz/finish'].includes(route.path)"/>
     </template>
     <template v-else>
