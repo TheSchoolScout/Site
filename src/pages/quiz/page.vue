@@ -104,7 +104,7 @@ async function load(){
 }
 
 async function next(){
-    if((page.value!.quiz.currentPage + 1) == page.value!.quiz.totalQuestions /*&& page.value!.question?.metadata.correctOptionIndex != null*/){ // в идеале должно быть полное условие
+    if((page.value!.quiz.currentPage + 1) == page.value!.quiz.totalQuestions && page.value!.question?.metadata.correctOptionIndex != null){
         await stop();
         return;
     }
