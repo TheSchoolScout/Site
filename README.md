@@ -1,5 +1,37 @@
-# Vue 3 + TypeScript + Vite
-
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+# SchoolScout (frontend)
+**SchoolScout** is a Telegram Web App that helps students to prepare for exams by offering different tests and tracking their progress.
+## Features
+- Daily tasks
+- User rating system
+- Topic-based tests
+- Random quiz modes
+- History overview
+## Stack
+- Vue 3
+## Setup
+1. Clone the repository
+```bash
+git clone https://github.com/TheSchoolScout/Site.git
+```
+2. Navigate to the project directory and install dependencies
+```bash
+cd Site
+npm ci
+```
+3. Run the dev server
+```bash
+npm run dev
+```
+4. Build for production
+```bash
+npm run build
+```
+5. Preview the local production build
+```bash
+npm run preview
+```
+Also, you can use Dockerfile to build the image and run the container
+```bash
+docker build -t schoolscout .
+docker run -p 8080:80 schoolscout
+```
