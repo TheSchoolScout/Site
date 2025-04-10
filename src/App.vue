@@ -17,7 +17,7 @@
                 </template>
             </Suspense>
         </RouterView>
-        <BottomBar v-if="!['/quiz/page', '/quiz/finish'].includes(route.path)"/>
+        <BottomBar v-if="!['/quiz/page', '/quiz/finish', '/register', '/qr'].includes(route.path)"/>
     </template>
     <template v-else>
         <ErrorPage/>
