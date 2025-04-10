@@ -1,6 +1,6 @@
 <template>
     <div class="item" @click="$router.replace(`/quiz/result/${data.id}`)">
-        <div class="score">{{ data.correct_answers }}/{{ data.questions_count }} ({{ data.correct_answers / data.questions_count * 100 }}%)</div>
+        <div class="score">{{ data.correct_answers }}/{{ data.questions_count }} ({{ Math.round(data.correct_answers / data.questions_count * 100) }}%)</div>
     </div>
 </template>
 <script lang="ts" setup>
