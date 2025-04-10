@@ -38,6 +38,9 @@ interface Window {
             openTelegramLink(url: string): () => void;
             openInvoice(url: string): () => void;
 
+            showScanQrPopup(params: { text?: string }, callback?: () => void): () => void;
+            closeScanQrPopup(): () => void;
+
             showPopup(params: {
                 title: string;
                 message: string;

@@ -50,6 +50,10 @@ const router = createRouter({
             path: "/admin/upload",
             component: () => import("./pages/admin/upload.vue"),
         },
+        {
+            path: "/admin/confirm",
+            component: () => import("./pages/admin/confirm.vue"),
+        },
     ],
 });
 

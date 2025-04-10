@@ -145,6 +145,11 @@ interface ProcessingClosedRequestResponse {
     processings: Processing[];
 }
 
+// /confirm/:token
+interface GetConfirmRequestResponse {
+    user: User;
+}
+
 type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
 
 export class Api {
@@ -238,6 +243,15 @@ export class Api {
             "GET",
             data
         );
+    };
+
+    //confirm
+    public validateConfirmToken = (token: string) => {
+        return request<undefined, ApiResponse<GetConfirmRequestResponse>>(`confirm/${token}`, "GET");
+    }
+
+    public confirm = (token: string) => {
+        return request<undefined, ApiResponse<undefined>>(`confirm/${token}`, "PUT");
     };
 }
 
