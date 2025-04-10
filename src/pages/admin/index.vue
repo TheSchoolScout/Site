@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <Button @click="$router.replace('/admin/upload')">Загрузить тему</Button>
+        <Actions/>
 
         <section>
             <header>
@@ -14,10 +14,10 @@
 </template>
 <script lang="ts" setup>
 import ProcessingList from '../../components/Admin/ProcessingList.vue';
-import Button from '../../components/UI/Button.vue';
 import { useRouter } from 'vue-router';
 import { useAppStore } from '../../stores/app';
 import { storeToRefs } from 'pinia';
+import Actions from '../../components/Admin/Actions.vue';
 
 const app = useAppStore();
 const { me } = storeToRefs(app);
