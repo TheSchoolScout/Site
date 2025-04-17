@@ -63,9 +63,9 @@ async function selectTask(task: Task){
 
                 router.replace("/quiz/page");
                 break;
-            case 'random-themed':
-                break;
             case 'random-theme':
+                break;
+            case 'random-themed':
                 const randomTheme = await api.randomQuizTheme({count: 20});
                 if(!randomTheme.ok) throw new Error("Failed to fetch random theme quiz");
 
