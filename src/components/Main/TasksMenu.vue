@@ -28,15 +28,19 @@
             <div class="text">Случайные вопросы по случайной теме</div>
             <Icon icon="material-symbols:arrow-forward-ios-rounded" class="arrow"/>
         </div>
+
+        <QuestionCountPicker v-if="showQuestionCountPicker" @close="showQuestionCountPicker = false" @pick="onQuestionCountPicked"/>
     </div>
 </template>
 <script lang="ts" setup>
+import { ref } from 'vue';
 import { Icon } from '@iconify/vue';
 import { useRouter } from 'vue-router';
 
 import { Api } from '../../api';
 import { useAppStore } from '../../stores/app';
 import { storeToRefs } from 'pinia';
+import QuestionCountPicker from './QuestionCountPicker.vue';
 const api = new Api();
 
 const app = useAppStore();
@@ -44,9 +48,28 @@ const { me } = storeToRefs(app);
 
 const router = useRouter();
 
+const showQuestionCountPicker = ref(false);
+const questionCount = ref(0);
+const selectedTask = ref<Task | null>(null);
+
+function onQuestionCountPicked(count: number) {
+    questionCount.value = count;
+    startTask(selectedTask.value!);
+}
+
 type Task = 'daily' | 'random' | 'random-themed' | 'random-theme';
 
+
 async function selectTask(task: Task){
+    if (task == 'daily') {
+        await startTask(task);
+    } else {
+        showQuestionCountPicker.value = true;
+        selectedTask.value = task;
+    }
+}
+
+async function startTask(task: Task) {
     try {
         switch (task) {
             case 'daily':
@@ -58,7 +81,7 @@ async function selectTask(task: Task){
                 router.replace("/quiz/page");           
                 break;
             case 'random':
-                const random = await api.randomQuiz({count: 20});
+                const random = await api.randomQuiz({count: +questionCount.value});
                 if(!random.ok) throw new Error("Failed to fetch random quiz");
 
                 router.replace("/quiz/page");
@@ -66,7 +89,7 @@ async function selectTask(task: Task){
             case 'random-theme':
                 break;
             case 'random-themed':
-                const randomTheme = await api.randomQuizTheme({count: 20});
+                const randomTheme = await api.randomQuizTheme({count: +questionCount.value});
                 if(!randomTheme.ok) throw new Error("Failed to fetch random theme quiz");
 
                 router.replace("/quiz/page");
