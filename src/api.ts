@@ -258,9 +258,9 @@ export class Api {
 function request<T, K>(route: string, method: RequestMethod, data?: T): Promise<K | ErrorResponse> {
     const app = useAppStore();
 
-    const { token } = storeToRefs(app);
+    const { token, backendUrl } = storeToRefs(app);
 
-    return ofetch<K | ErrorResponse>(`${import.meta.env.VITE_APP_BACKEND_URL}/${route}`, {
+    return ofetch<K | ErrorResponse>(`${backendUrl.value}/${route}`, {
         method: method,
         ...(method != "GET" ? data && { body: data } : data && { query: data }),
         headers: {

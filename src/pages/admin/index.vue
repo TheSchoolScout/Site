@@ -10,6 +10,15 @@
                 <ProcessingList/>
             </div>
         </section>
+
+        <section>
+            <header>
+                <div class="title">Приложение</div>
+            </header>
+            <div class="container">
+                <BackendSwitcher/>
+            </div>
+        </section>
     </div>
 </template>
 <script lang="ts" setup>
@@ -18,6 +27,7 @@ import { useRouter } from 'vue-router';
 import { useAppStore } from '../../stores/app';
 import { storeToRefs } from 'pinia';
 import Actions from '../../components/Admin/Actions.vue';
+import BackendSwitcher from '../../components/Admin/BackendSwitcher.vue';
 
 const app = useAppStore();
 const { me } = storeToRefs(app);

@@ -21,6 +21,19 @@ export const useAppStore = defineStore("app", () => {
         is_testing: boolean;
     }>();
 
+    const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
+    const backendUrl = ref(JSON.parse(localStorage.getItem("settings") || "{}").backendUrl || BACKEND_URL);
+
+    function setBackendUrl(url: string) {
+        backendUrl.value = url;
+        localStorage.setItem("settings", JSON.stringify({ backendUrl: url }));
+    }
+
+    function resetBackendUrl() {
+        backendUrl.value = BACKEND_URL || "";
+        localStorage.removeItem("settings");
+    }
+
     return {
         confirmToken,
         token,
@@ -31,5 +44,9 @@ export const useAppStore = defineStore("app", () => {
         quizResults,
 
         me,
+
+        backendUrl,
+        setBackendUrl,
+        resetBackendUrl,
     };
 });
